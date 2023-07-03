@@ -346,7 +346,12 @@ class GroupDetailsScreenView extends GetView<GroupDetailController> {
                                     ],
                                   ),
                                   IconButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        controller.postList.removeWhere(
+                                            (element) =>
+                                                element.id ==
+                                                controller.postList[index].id);
+                                      },
                                       icon: Icon(Icons.clear_rounded))
                                 ],
                               ),

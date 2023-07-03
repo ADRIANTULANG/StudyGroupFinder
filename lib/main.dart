@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     return Sizer(builder: (context, orientation, deviceType) {
       return GetMaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'SGF',
+        title: 'Student Group Finder',
         theme: ThemeData(
           primarySwatch: Colors.grey,
         ),

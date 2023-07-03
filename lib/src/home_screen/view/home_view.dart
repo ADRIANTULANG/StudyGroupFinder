@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+import '../../search_screen/view/search_view.dart';
 import '../controller/home_controller.dart';
 import '../widget/homescreen_appdrawer.dart';
 import '../widget/homescreen_create_group.dart';
@@ -42,8 +43,7 @@ class HomeScreenView extends GetView<HomeController> {
                   Timer(const Duration(milliseconds: 1000), () {
                 if (value.isEmpty || value == "") {
                 } else {
-                  // Get.to(() => SearchScreenView(),
-                  //     arguments: {"keyword": value});
+                  Get.to(() => SearchView(), arguments: {"word": value});
                 }
                 FocusScope.of(context).unfocus();
               });

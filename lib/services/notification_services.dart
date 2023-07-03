@@ -98,6 +98,28 @@ class NotificationServices extends GetxService {
     // }
   }
 
+  // sendNotification({required String userToken}) async {
+  //   print(userToken);
+  //   var body = jsonEncode({
+  //     "to":
+  //         "fSw60xJBTW2Bhvksvp8aQ2:APA91bFtS5cuZoDGdlJD2-69OqyTo_8QM62INOk3Ep-B-04820LQkPIowmT416dVnYAxo6d89PILD1zWLjFS0gTeHpRjN_y3nn925uMmpqLjdmf_Ns3tWFnSpOYDTS_5WSQwc0ilfIJL",
+  //     "notification": {
+  //       "body": "Hi your order is Accepted",
+  //       "title": "Food3ip",
+  //       "subtitle": "",
+  //     }
+  //   });
+  //   var e2epushnotif =
+  //       await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+  //           headers: {
+  //             "Authorization":
+  //                 "key=AAAAFXgQldg:APA91bH0blj9KQykFmRZ1Pjub61SPwFyaq-YjvtH1vTvsOeNQ6PTWCYm5S7pOZIuB5zuc7hrFFYsRbuxEB8vF9N5nQoW9fZckjy4bwwltxf4ATPeBDH4L4VlZ1yyVBHF3OKr3yVZ_Ioy",
+  //             "Content-Type": "application/json"
+  //           },
+  //           body: body);
+  //   print("e2e notif: ${e2epushnotif.body}");
+  // }
+
   Future<void> getToken() async {
     token = await messaging.getToken();
     await FirebaseFirestore.instance
