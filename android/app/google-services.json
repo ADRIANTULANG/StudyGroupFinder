@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "74020796944",
+    "project_id": "studygroupfinder-1c13d",
+    "storage_bucket": "studygroupfinder-1c13d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:74020796944:android:1626364a4580b9f6d06895",
+        "android_client_info": {
+          "package_name": "com.example.sgf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "74020796944-s6a57k7dnlfdso91j53udfi3et4l7apb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUIHCIl8CmDI2QM9h3Ah6_XedVDTj83Jw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "74020796944-s6a57k7dnlfdso91j53udfi3et4l7apb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
