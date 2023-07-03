@@ -126,21 +126,6 @@ class SharedResourcesController extends GetxController {
       SharedResourcesAlertDialogs.showSuccessUpload();
 
       getFiles();
-      var res = await FirebaseFirestore.instance
-          .collection('members')
-          .where('group_id', isEqualTo: groupDocumentReference)
-          .get();
-      var members = res.docs;
-      for (var i = 0; i < members.length; i++) {
-        var userDetails = await members[i]['member_id'].get();
-        String body = userDetails.get('firstname') +
-            " shared a file in ${group_name.value}";
-        sendNotification(
-            userToken: userDetails.get('fcmToken'),
-            notifbody: body,
-            title: "Shared File",
-            subtitle: "");
-      }
     } catch (e) {
       print("error: $e");
     }
@@ -166,27 +151,5 @@ class SharedResourcesController extends GetxController {
           fileList[index].isDownloading.value = false;
           print("ERROR: $error");
         });
-  }
-
-  sendNotification(
-      {required String userToken,
-      required String notifbody,
-      required String title,
-      required String subtitle}) async {
-    var body = jsonEncode({
-      "to": userToken,
-      "notification": {
-        "body": "$notifbody",
-        "title": title,
-        "subtitle": subtitle,
-      }
-    });
-    http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
-        headers: {
-          "Authorization":
-              "key=AAAAETv7uhA:APA91bEshE-L4T4-5JQRP6GvCAu18QSpAOrWjT4xRpcIy7yuoEB5OWm4-dQtfG_-2L8CSyG4gJZ4IZ_NfNCOpb_-TKHeEy6vUnhvZ9Rp3oye0iECh6Vg1Ay5H7hB88xaoLTe8SjFxYVK",
-          "Content-Type": "application/json"
-        },
-        body: body);
   }
 }
