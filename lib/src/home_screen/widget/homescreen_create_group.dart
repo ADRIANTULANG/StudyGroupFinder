@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:sgf/src/home_screen/controller/home_controller.dart';
 import 'package:sizer/sizer.dart';
@@ -141,31 +142,54 @@ class CreateGroup extends GetView<HomeController> {
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        height: 7.h,
-        width: 100.w,
-        decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: Colors.grey, width: .5))),
-        child: Padding(
-          padding:
-              EdgeInsets.only(left: 5.w, right: 5.w, top: 1.h, bottom: 1.h),
-          child: InkWell(
-            onTap: () {
-              controller.createGroup();
-            },
-            child: Container(
-              color: Colors.black,
-              alignment: Alignment.center,
-              child: Text(
-                "Create Group",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w400,
+      bottomNavigationBar: Obx(
+        () => controller.isCreatingGroup.value == true
+            ? Container(
+                height: 7.h,
+                width: 100.w,
+                decoration: BoxDecoration(
+                    border:
+                        Border(top: BorderSide(color: Colors.grey, width: .5))),
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      left: 5.w, right: 5.w, top: 1.h, bottom: 1.h),
+                  child: Container(
+                      padding: EdgeInsets.only(top: .5.h, bottom: .5.h),
+                      color: Colors.black,
+                      alignment: Alignment.center,
+                      child: SpinKitThreeBounce(
+                        color: Colors.white,
+                        size: 25.sp,
+                      )),
+                ),
+              )
+            : Container(
+                height: 7.h,
+                width: 100.w,
+                decoration: BoxDecoration(
+                    border:
+                        Border(top: BorderSide(color: Colors.grey, width: .5))),
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      left: 5.w, right: 5.w, top: 1.h, bottom: 1.h),
+                  child: InkWell(
+                    onTap: () {
+                      controller.createGroup();
+                    },
+                    child: Container(
+                      color: Colors.black,
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Create Group",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-        ),
       ),
     );
   }

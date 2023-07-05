@@ -39,6 +39,10 @@ class GroupDetailController extends GetxController {
   RxList<GroupPost> postList = <GroupPost>[].obs;
   RxList<RequestModel> requestList = <RequestModel>[].obs;
 
+  RxBool isDeleting = false.obs;
+  RxBool isPosting = false.obs;
+  RxBool isSubmitting = false.obs;
+
   @override
   void onInit() async {
     super.onInit();
@@ -126,6 +130,7 @@ class GroupDetailController extends GetxController {
 
   createPost() async {
     try {
+      isPosting.value = true;
       var urlDownload = '';
       if (filename.value != '') {
         final ref = await FirebaseStorage.instance
@@ -157,8 +162,10 @@ class GroupDetailController extends GetxController {
       Get.back();
       getPost();
       Get.find<HomeController>().getPost();
+      isPosting.value = false;
     } catch (e) {
       print("error: $e");
+      isPosting.value = false;
     }
   }
 
@@ -251,6 +258,68 @@ class GroupDetailController extends GetxController {
       getRequest();
     } catch (e) {
       print(e);
+    }
+  }
+
+  deleteGroup() async {
+    try {
+      isDeleting.value = true;
+      var groupDocumentReference = await FirebaseFirestore.instance
+          .collection('groups')
+          .doc(group_id.value);
+      await FirebaseFirestore.instance
+          .collection('groups')
+          .doc(group_id.value)
+          .delete();
+
+      // DELETE MEMBERS FOR THIS GROUP
+      final membersBatchRef = await FirebaseFirestore.instance
+          .collection('members')
+          .where("group_id", isEqualTo: groupDocumentReference)
+          .get();
+      WriteBatch memberbatch = FirebaseFirestore.instance.batch();
+      for (final member in membersBatchRef.docs) {
+        var memberDocumentReference = await FirebaseFirestore.instance
+            .collection('members')
+            .doc(member.id);
+        memberbatch.delete(memberDocumentReference);
+      }
+      await memberbatch.commit();
+
+      // DELETE FILES FOR THIS GROUP
+      final groupFilesBatchRef = await FirebaseFirestore.instance
+          .collection('groupfiles')
+          .where("groupid", isEqualTo: groupDocumentReference)
+          .get();
+      WriteBatch groupfilesbatch = FirebaseFirestore.instance.batch();
+      for (final files in groupFilesBatchRef.docs) {
+        var groupFilesDocumentReference = await FirebaseFirestore.instance
+            .collection('groupfiles')
+            .doc(files.id);
+        groupfilesbatch.delete(groupFilesDocumentReference);
+      }
+      await groupfilesbatch.commit();
+
+      // DELETE POST FOR THIS GROUP
+      final postBatchRef = await FirebaseFirestore.instance
+          .collection('post')
+          .where("group_id", isEqualTo: group_id.value)
+          .get();
+      WriteBatch postfilesbatch = FirebaseFirestore.instance.batch();
+      for (final post in postBatchRef.docs) {
+        var postDocumentReference =
+            await FirebaseFirestore.instance.collection('post').doc(post.id);
+        postfilesbatch.delete(postDocumentReference);
+      }
+      await postfilesbatch.commit();
+      Get.back();
+      Get.back();
+      Get.find<HomeController>().getMyGroups();
+      Get.find<HomeController>().getGroups();
+      Get.find<HomeController>().getPost();
+      isDeleting.value = false;
+    } catch (e) {
+      isDeleting.value = false;
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:sgf/src/groupdetail_screen/controller/groupdetails_controller.dart';
 import 'package:sizer/sizer.dart';
@@ -65,31 +66,53 @@ class CreateRequestJoin extends GetView<GroupDetailController> {
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        height: 7.h,
-        width: 100.w,
-        decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: Colors.grey, width: .5))),
-        child: Padding(
-          padding:
-              EdgeInsets.only(left: 5.w, right: 5.w, top: 1.h, bottom: 1.h),
-          child: InkWell(
-            onTap: () {
-              controller.createRequest();
-            },
-            child: Container(
-              color: Colors.black,
-              alignment: Alignment.center,
-              child: Text(
-                "Submit",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w400,
+      bottomNavigationBar: Obx(
+        () => controller.isSubmitting.value == true
+            ? Container(
+                height: 7.h,
+                width: 100.w,
+                decoration: BoxDecoration(
+                    border:
+                        Border(top: BorderSide(color: Colors.grey, width: .5))),
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      left: 5.w, right: 5.w, top: 1.h, bottom: 1.h),
+                  child: Container(
+                      color: Colors.black,
+                      alignment: Alignment.center,
+                      child: SpinKitThreeBounce(
+                        color: Colors.white,
+                        size: 25.sp,
+                      )),
+                ),
+              )
+            : Container(
+                height: 7.h,
+                width: 100.w,
+                decoration: BoxDecoration(
+                    border:
+                        Border(top: BorderSide(color: Colors.grey, width: .5))),
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      left: 5.w, right: 5.w, top: 1.h, bottom: 1.h),
+                  child: InkWell(
+                    onTap: () {
+                      controller.createRequest();
+                    },
+                    child: Container(
+                      color: Colors.black,
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Submit",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-        ),
       ),
     );
   }

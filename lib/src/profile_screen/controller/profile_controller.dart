@@ -35,6 +35,8 @@ class ProfileController extends GetxController {
     super.onInit();
   }
 
+  RxBool isUpdating = false.obs;
+
   getUserDetails() async {
     try {
       var userDetails = await FirebaseFirestore.instance
@@ -68,6 +70,7 @@ class ProfileController extends GetxController {
 
   updateAccount() async {
     try {
+      isUpdating.value = true;
       if (picked_image != null) {
         final ref = await FirebaseStorage.instance
             .ref()
@@ -103,6 +106,9 @@ class ProfileController extends GetxController {
       }
       await batch.commit();
       ProfileAlertDialogs.showSuccessUpdate();
-    } catch (e) {}
+      isUpdating.value = false;
+    } catch (e) {
+      isUpdating.value = false;
+    }
   }
 }

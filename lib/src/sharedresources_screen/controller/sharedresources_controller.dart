@@ -45,6 +45,8 @@ class SharedResourcesController extends GetxController {
 
   RxList<FileModel> fileList = <FileModel>[].obs;
 
+  RxBool isUploading = false.obs;
+
   @override
   void onInit() async {
     groupID.value = await Get.arguments['group_id'];
@@ -98,6 +100,7 @@ class SharedResourcesController extends GetxController {
 
   uploadFile() async {
     try {
+      isUploading.value = true;
       String fileLink = '';
       var userDocumentReference = await FirebaseFirestore.instance
           .collection('users')
@@ -141,8 +144,10 @@ class SharedResourcesController extends GetxController {
       //       title: "Shared File",
       //       subtitle: "");
       // }
+      isUploading.value = false;
     } catch (e) {
       print("error: $e");
+      isUploading.value = false;
     }
   }
 

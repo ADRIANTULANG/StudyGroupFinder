@@ -34,6 +34,8 @@ class HomeController extends GetxController {
 
   RxList<HomePost> postList = <HomePost>[].obs;
 
+  RxBool isCreatingGroup = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -128,6 +130,7 @@ class HomeController extends GetxController {
 
   createGroup() async {
     try {
+      isCreatingGroup.value = true;
       final ref =
           await FirebaseStorage.instance.ref().child("files/${filename.value}");
       uploadTask = ref.putData(uint8list!);
@@ -155,8 +158,11 @@ class HomeController extends GetxController {
       });
       Get.back();
       getGroups();
+      isCreatingGroup.value = false;
       HomescreenAlertDialog.showSuccessCreateGroup();
     } catch (e) {
+      isCreatingGroup.value = false;
+
       print("error: $e");
     }
   }

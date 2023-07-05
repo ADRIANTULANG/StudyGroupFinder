@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:sizer/sizer.dart';
-
-import '../../../services/getstorage_services.dart';
-import '../../login_screen/view/login_view.dart';
 import '../../profile_screen/view/profile_view.dart';
 import '../controller/home_controller.dart';
+import 'homescreen_alertdialogs.dart';
 
 class HomeScreenAppDrawer {
   static showAppDrawer({required HomeController controller}) {
@@ -36,8 +33,7 @@ class HomeScreenAppDrawer {
             leading: Icon(Icons.logout),
             title: Text('Log out'),
             onTap: () {
-              Get.find<StorageServices>().removeStorageCredentials();
-              Get.offAll(() => LoginScreenView());
+              HomescreenAlertDialog.showLogoutDialog();
             },
           ),
         ],

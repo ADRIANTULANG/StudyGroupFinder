@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sgf/src/groupdetail_screen/controller/groupdetails_controller.dart';
 import 'package:sizer/sizer.dart';
 
 class GroupDetailsAlertDialog {
@@ -89,6 +90,70 @@ class GroupDetailsAlertDialog {
             style: TextStyle(fontWeight: FontWeight.normal, fontSize: 11.sp),
           ),
         ],
+      ),
+    )));
+  }
+
+  static showDeleteMessage({required GroupDetailController controller}) async {
+    Get.dialog(AlertDialog(
+        content: Container(
+      height: 20.h,
+      width: 100.w,
+      color: Colors.white,
+      child: Obx(
+        () => controller.isDeleting.value == true
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Delete Group",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15.sp,
+                        color: Colors.black),
+                  ),
+                  SizedBox(
+                    height: 3.5.h,
+                  ),
+                  Text(
+                    "Delete this group? All files on this group will be deleted permanently.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontWeight: FontWeight.normal, fontSize: 11.sp),
+                  ),
+                  SizedBox(
+                    height: 3.5.h,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        "Cancel",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13.sp,
+                            color: Colors.black),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          controller.deleteGroup();
+                        },
+                        child: Text(
+                          "Confirm",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13.sp,
+                              color: Colors.red),
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
       ),
     )));
   }

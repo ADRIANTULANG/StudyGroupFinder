@@ -39,10 +39,19 @@ class GroupDetailsScreenView extends GetView<GroupDetailController> {
                         child: Icon(Icons.people_alt)),
                   ))
               : SizedBox()),
-          // SizedBox(
-          //   width: 4.w,
-          // ),
-          // Icon(Icons.message),
+          SizedBox(
+            width: 4.w,
+          ),
+          Obx(
+            () => controller.isAdmin.value == true
+                ? InkWell(
+                    onTap: () {
+                      GroupDetailsAlertDialog.showDeleteMessage(
+                          controller: controller);
+                    },
+                    child: Icon(Icons.delete))
+                : SizedBox(),
+          ),
           SizedBox(
             width: 5.w,
           )

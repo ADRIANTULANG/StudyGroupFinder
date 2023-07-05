@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 
@@ -261,29 +262,51 @@ class ProfileView extends GetView<ProfileController> {
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.only(left: 5.w, right: 5.w, top: 2.h, bottom: 1.h),
-        height: 8.h,
-        width: 100.w,
-        decoration:
-            BoxDecoration(border: Border(top: BorderSide(color: Colors.grey))),
-        child: InkWell(
-          onTap: () {
-            controller.updateAccount();
-          },
-          child: Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(2), color: Colors.black),
-            alignment: Alignment.center,
-            child: Text(
-              "Update",
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 13.sp,
-                  color: Colors.white),
-            ),
-          ),
-        ),
+      bottomNavigationBar: Obx(
+        () => controller.isUpdating.value == true
+            ? Container(
+                padding: EdgeInsets.only(
+                    left: 5.w, right: 5.w, top: 2.h, bottom: 1.h),
+                height: 8.h,
+                width: 100.w,
+                decoration: BoxDecoration(
+                    border: Border(top: BorderSide(color: Colors.grey))),
+                child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(2),
+                        color: Colors.black),
+                    alignment: Alignment.center,
+                    child: SpinKitThreeBounce(
+                      color: Colors.white,
+                      size: 25.sp,
+                    )),
+              )
+            : Container(
+                padding: EdgeInsets.only(
+                    left: 5.w, right: 5.w, top: 2.h, bottom: 1.h),
+                height: 8.h,
+                width: 100.w,
+                decoration: BoxDecoration(
+                    border: Border(top: BorderSide(color: Colors.grey))),
+                child: InkWell(
+                  onTap: () {
+                    controller.updateAccount();
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(2),
+                        color: Colors.black),
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Update",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 13.sp,
+                          color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
       ),
     );
   }
