@@ -35,6 +35,7 @@ class HomeController extends GetxController {
   RxList<HomePost> postList = <HomePost>[].obs;
 
   RxBool isCreatingGroup = false.obs;
+  RxBool isDeleting = false.obs;
 
   @override
   void onInit() {
@@ -165,5 +166,18 @@ class HomeController extends GetxController {
 
       print("error: $e");
     }
+  }
+
+  deletePost({required String documentID}) async {
+    isDeleting.value = true;
+    try {
+      await FirebaseFirestore.instance
+          .collection('post')
+          .doc(documentID)
+          .delete();
+      getPost();
+    } catch (e) {}
+    Get.back();
+    isDeleting.value = false;
   }
 }

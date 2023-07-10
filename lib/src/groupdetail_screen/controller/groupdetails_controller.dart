@@ -322,4 +322,18 @@ class GroupDetailController extends GetxController {
       isDeleting.value = false;
     }
   }
+
+  deletePost({required String documentID}) async {
+    isDeleting.value = true;
+    try {
+      await FirebaseFirestore.instance
+          .collection('post')
+          .doc(documentID)
+          .delete();
+      getPost();
+      Get.find<HomeController>().getPost();
+    } catch (e) {}
+    Get.back();
+    isDeleting.value = false;
+  }
 }

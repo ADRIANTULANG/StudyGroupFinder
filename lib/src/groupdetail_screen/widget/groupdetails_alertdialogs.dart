@@ -157,4 +157,70 @@ class GroupDetailsAlertDialog {
       ),
     )));
   }
+
+  static showDeletePost(
+      {required GroupDetailController controller,
+      required String documentID}) async {
+    Get.dialog(AlertDialog(
+        content: Container(
+      height: 20.h,
+      width: 100.w,
+      color: Colors.white,
+      child: Obx(
+        () => controller.isDeleting.value == true
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Delete Post",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15.sp,
+                        color: Colors.black),
+                  ),
+                  SizedBox(
+                    height: 3.5.h,
+                  ),
+                  Text(
+                    "Do you want to delete this post?",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontWeight: FontWeight.normal, fontSize: 11.sp),
+                  ),
+                  SizedBox(
+                    height: 3.5.h,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        "Cancel",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13.sp,
+                            color: Colors.black),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          controller.deletePost(documentID: documentID);
+                        },
+                        child: Text(
+                          "Confirm",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13.sp,
+                              color: Colors.red),
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+      ),
+    )));
+  }
 }

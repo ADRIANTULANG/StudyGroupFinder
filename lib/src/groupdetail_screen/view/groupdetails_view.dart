@@ -354,14 +354,20 @@ class GroupDetailsScreenView extends GetView<GroupDetailController> {
                                       ),
                                     ],
                                   ),
-                                  IconButton(
-                                      onPressed: () {
-                                        controller.postList.removeWhere(
-                                            (element) =>
-                                                element.id ==
-                                                controller.postList[index].id);
-                                      },
-                                      icon: Icon(Icons.clear_rounded))
+                                  controller.postList[index].userId ==
+                                          Get.find<StorageServices>()
+                                              .storage
+                                              .read('id')
+                                      ? IconButton(
+                                          onPressed: () {
+                                            GroupDetailsAlertDialog
+                                                .showDeletePost(
+                                                    controller: controller,
+                                                    documentID: controller
+                                                        .postList[index].id);
+                                          },
+                                          icon: Icon(Icons.clear_rounded))
+                                      : SizedBox(),
                                 ],
                               ),
                               controller.postList[index].post == ""

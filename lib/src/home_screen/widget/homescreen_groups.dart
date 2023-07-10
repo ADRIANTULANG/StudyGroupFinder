@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sgf/src/groupdetail_screen/view/groupdetails_view.dart';
 import 'package:sgf/src/home_screen/controller/home_controller.dart';
+import 'package:sgf/src/home_screen/widget/homescreen_alertdialogs.dart';
 import 'package:sizer/sizer.dart';
 import 'package:intl/intl.dart';
+
+import '../../../services/getstorage_services.dart';
 
 class GroupsScreenView extends GetView<HomeController> {
   const GroupsScreenView({super.key});
@@ -178,14 +181,19 @@ class GroupsScreenView extends GetView<HomeController> {
                                     ),
                                   ],
                                 ),
-                                IconButton(
-                                    onPressed: () {
-                                      controller.postList.removeWhere(
-                                          (element) =>
-                                              element.id ==
-                                              controller.postList[index].id);
-                                    },
-                                    icon: Icon(Icons.clear_rounded))
+                                controller.postList[index].userId ==
+                                        Get.find<StorageServices>()
+                                            .storage
+                                            .read('id')
+                                    ? IconButton(
+                                        onPressed: () {
+                                          HomescreenAlertDialog.showDeletePost(
+                                              controller: controller,
+                                              documentID: controller
+                                                  .postList[index].id);
+                                        },
+                                        icon: Icon(Icons.clear_rounded))
+                                    : SizedBox()
                               ],
                             ),
                             controller.postList[index].post == ""
