@@ -4,14 +4,17 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sgf/services/notification_services.dart';
 import 'package:sgf/src/home_screen/model/home_post_model.dart';
 import 'package:sgf/src/home_screen/widget/homescreen_mygroups.dart';
 
 import '../../../services/getstorage_services.dart';
+import '../../login_screen/view/login_view.dart';
 import '../model/home_groups_model.dart';
 import '../widget/homescreen_alertdialogs.dart';
 import '../widget/homescreen_groups.dart';
@@ -43,6 +46,48 @@ class HomeController extends GetxController {
     getGroups();
     getPost();
     getMyGroups();
+    getDeviceId();
+  }
+
+  getDeviceId() async {
+    var deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) {
+      // import 'dart:io'
+    } else if (Platform.isAndroid) {
+      var androidDeviceInfo = await deviceInfo.androidInfo;
+      print(androidDeviceInfo.model);
+      print(androidDeviceInfo.product);
+      print(androidDeviceInfo.brand);
+      print(androidDeviceInfo.id);
+      var fcmTokenRes = await FirebaseFirestore.instance
+          .collection('tokens')
+          .where('userid',
+              isEqualTo: Get.find<StorageServices>().storage.read('id'))
+          .get();
+      var fcmTokens = fcmTokenRes.docs;
+      if (fcmTokens.length == 0) {
+        String token = await Get.find<NotificationServices>().getToken();
+        await FirebaseFirestore.instance.collection('tokens').add({
+          "token": token,
+          "deviceid": androidDeviceInfo.id,
+          "userid": Get.find<StorageServices>().storage.read('id'),
+          "deviceName": androidDeviceInfo.brand + " " + androidDeviceInfo.model
+        });
+      } else {
+        for (var i = 0; i < fcmTokens.length; i++) {
+          String token = await Get.find<NotificationServices>().getToken();
+          await FirebaseFirestore.instance
+              .collection('tokens')
+              .doc(fcmTokens[i].id)
+              .update({
+            "token": token,
+            "deviceid": androidDeviceInfo.id,
+            "deviceName":
+                androidDeviceInfo.brand + " " + androidDeviceInfo.model
+          });
+        }
+      }
+    }
   }
 
   List<Widget> screens = [
@@ -179,5 +224,26 @@ class HomeController extends GetxController {
     } catch (e) {}
     Get.back();
     isDeleting.value = false;
+  }
+
+  logout() async {
+    try {
+      var res = await FirebaseFirestore.instance
+          .collection('tokens')
+          .where('userid',
+              isEqualTo: Get.find<StorageServices>().storage.read('id'))
+          .get();
+      for (var i = 0; i < res.docs.length; i++) {
+        await FirebaseFirestore.instance
+            .collection('tokens')
+            .doc(res.docs[i].id)
+            .delete();
+      }
+      Get.back();
+      Get.find<StorageServices>().removeStorageCredentials();
+      Get.offAll(() => LoginScreenView());
+    } on Exception catch (e) {
+      print("log out error $e");
+    }
   }
 }

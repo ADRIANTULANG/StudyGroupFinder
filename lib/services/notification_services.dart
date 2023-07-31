@@ -1,12 +1,9 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-
-import 'getstorage_services.dart';
 
 class NotificationServices extends GetxService {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -98,35 +95,33 @@ class NotificationServices extends GetxService {
     // }
   }
 
-  // sendNotification({required String userToken}) async {
-  //   print(userToken);
-  //   var body = jsonEncode({
-  //     "to":
-  //         "fSw60xJBTW2Bhvksvp8aQ2:APA91bFtS5cuZoDGdlJD2-69OqyTo_8QM62INOk3Ep-B-04820LQkPIowmT416dVnYAxo6d89PILD1zWLjFS0gTeHpRjN_y3nn925uMmpqLjdmf_Ns3tWFnSpOYDTS_5WSQwc0ilfIJL",
-  //     "notification": {
-  //       "body": "Hi your order is Accepted",
-  //       "title": "Food3ip",
-  //       "subtitle": "",
-  //     }
-  //   });
-  //   var e2epushnotif =
-  //       await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
-  //           headers: {
-  //             "Authorization":
-  //                 "key=AAAAFXgQldg:APA91bH0blj9KQykFmRZ1Pjub61SPwFyaq-YjvtH1vTvsOeNQ6PTWCYm5S7pOZIuB5zuc7hrFFYsRbuxEB8vF9N5nQoW9fZckjy4bwwltxf4ATPeBDH4L4VlZ1yyVBHF3OKr3yVZ_Ioy",
-  //             "Content-Type": "application/json"
-  //           },
-  //           body: body);
-  //   print("e2e notif: ${e2epushnotif.body}");
-  // }
+  sendNotification(
+      {required String userToken,
+      required String deviceName,
+      required String time}) async {
+    var body = jsonEncode({
+      "to": "$userToken",
+      "notification": {
+        "body": "You login on $deviceName, $time",
+        "title": "New Device login",
+        "subtitle": "",
+      }
+    });
 
-  Future<void> getToken() async {
+    var response =
+        await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+            headers: {
+              "Authorization":
+                  "key=AAAAETv7uhA:APA91bEshE-L4T4-5JQRP6GvCAu18QSpAOrWjT4xRpcIy7yuoEB5OWm4-dQtfG_-2L8CSyG4gJZ4IZ_NfNCOpb_-TKHeEy6vUnhvZ9Rp3oye0iECh6Vg1Ay5H7hB88xaoLTe8SjFxYVK",
+              "Content-Type": "application/json"
+            },
+            body: body);
+    print(response.statusCode);
+  }
+
+  Future<String> getToken() async {
     token = await messaging.getToken();
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(Get.find<StorageServices>().storage.read("id"))
-        .update({"fcmToken": token});
-    print('Generated device token: $token');
+    return token!;
   }
 }
 

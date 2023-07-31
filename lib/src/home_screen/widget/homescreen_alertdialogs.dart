@@ -37,7 +37,7 @@ class HomescreenAlertDialog {
     )));
   }
 
-  static showLogoutDialog() async {
+  static showLogoutDialog({required HomeController controller}) async {
     Get.dialog(AlertDialog(
         content: Container(
       height: 20.h,
@@ -73,10 +73,8 @@ class HomescreenAlertDialog {
                 ),
               ),
               InkWell(
-                onTap: () {
-                  Get.back();
-                  Get.find<StorageServices>().removeStorageCredentials();
-                  Get.offAll(() => LoginScreenView());
+                onTap: () async {
+                  controller.logout();
                 },
                 child: Text(
                   "Yes",

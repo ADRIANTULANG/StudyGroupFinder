@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-
+import '../../../services/notification_services.dart';
 import '../../login_screen/widget/login_screen_alertdialog.dart';
 
 class OtpScreenController extends GetxController {
@@ -43,7 +46,7 @@ class OtpScreenController extends GetxController {
 
       if (authCredential.user != null) {
         try {
-          await FirebaseFirestore.instance.collection("users").add({
+          var res = await FirebaseFirestore.instance.collection("users").add({
             "address": address.value,
             "image": "",
             "contact": contact.value,
@@ -52,6 +55,7 @@ class OtpScreenController extends GetxController {
             "password": password.value,
             "username": username.value,
           });
+          getDeviceId(id: res.id);
           Get.back();
           Get.back();
           LoginAlertDialog.showSuccessCreateAccount();
@@ -63,6 +67,26 @@ class OtpScreenController extends GetxController {
     } on FirebaseAuthException catch (e) {
       print(e);
       isVerifyingOTP(false);
+    }
+  }
+
+  getDeviceId({required String id}) async {
+    var deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) {
+      // import 'dart:io'
+    } else if (Platform.isAndroid) {
+      var androidDeviceInfo = await deviceInfo.androidInfo;
+      print(androidDeviceInfo.model);
+      print(androidDeviceInfo.product);
+      print(androidDeviceInfo.brand);
+      print(androidDeviceInfo.id);
+      String token = await Get.find<NotificationServices>().getToken();
+      await FirebaseFirestore.instance.collection('tokens').add({
+        "token": token,
+        "deviceid": androidDeviceInfo.id,
+        "userid": id,
+        "deviceName": androidDeviceInfo.brand + " " + androidDeviceInfo.model
+      });
     }
   }
 }

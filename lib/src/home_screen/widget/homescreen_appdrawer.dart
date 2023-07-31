@@ -33,7 +33,7 @@ class HomeScreenAppDrawer {
             leading: Icon(Icons.logout),
             title: Text('Log out'),
             onTap: () {
-              HomescreenAlertDialog.showLogoutDialog();
+              HomescreenAlertDialog.showLogoutDialog(controller: controller);
             },
           ),
         ],
